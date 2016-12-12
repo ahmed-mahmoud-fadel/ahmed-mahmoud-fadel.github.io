@@ -1,0 +1,177 @@
+ <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+ <html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="http://localhost/index.rss" >
+        <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/droid-arabic-naskh" type="text/css"/> 
+        <title> : سكربت لحل الغاز اكمال المعادلة بالمعاملات</title>
+        <style type="text/css" media="screen, print, projection">
+       body,
+       html {
+              margin:0;
+              padding:0;
+              color:#000;
+              background:#fff;
+       }
+       #wrap {
+              width:900px;
+              margin:0 auto;
+              background:#ffff;
+       }
+       #header {
+       padding:5px 10px;
+              background:#ffff;
+       }
+       h1 {
+           margin:0;
+    }
+       #nav {
+              padding:5px 10px;
+              background:#ffff;
+       }
+       #nav ul {
+              margin:0;
+              padding:0;
+              list-style:none;
+       }
+       #nav li {
+              display:inline;
+              margin:0;
+              padding:0;
+       }
+       #main {
+              float:left;
+              width:900px;
+              padding:0px;
+              background:#ffff;
+       }
+       h2 {
+              margin:0 0 1em;
+       }
+
+       #footer {
+              clear:both;
+              padding:5px 10px;
+              background:#ffffff;
+       }
+       #footer p {
+              margin:0;
+    }
+       * html #footer {
+              height:1px;
+       }
+
+    a:link {color:#15153E;text-decoration:none;}
+       a:visited {color:#000000;text-decoration:none;}
+a:hover {color:#38B085;text-decoration:underline;}
+       </style>
+
+     </head>
+    <body>
+    <div id="wrap">
+    <div align="center"><h2>
+  <div style="font-family: 'Droid Arabic Kufi', serif;">::
+  <a href="https://alyassen.github.io">كل المقالات</a> ::
+   </div></h2>
+
+  </div>    
+    
+        <h2>Tue, 24 Feb 2015</h2>
+ <div id="main">
+  <div dir=rtl><div style="font-family: 'Droid Arabic Naskh', serif;">
+  <h3>سكربت لحل الغاز اكمال المعادلة بالمعاملات</h3></div>
+  <div style="font-family: 'Droid Arabic Naskh', serif;">
+بسم الله الرحمن الرحيم <br>
+
+قام مشرف منتدى البرمجة في مجتمع لينكس بطرح مسألة جميلة جدا ، اغرت فضولي لمحاولة ايجاد حل لها . هي مسألة دائما نمر عليها في الالغاز و كتب الذكاء و لكن لم يسبق لي ان فكرت في جعل العملية الية فالشكر موصول الى مشرفنا العزيز على هذه اللفتة الرائعة. <br>
+
+نص المسألة : <br>
+
+" نعود للألغاز مجددا و مع لغز آخر : <br>
+يقول اللغز لدينا سلسة مكونة من خمسة أعداد كما يلي : <br>
+
+<div dir=ltr>
+
+9,-4,8,6,10
+
+</div>
+
+و لدينا المعاملات الأساسية الأربعة + – * / و المطلوب هو برمجة سكريبت بلغة PHP يقوم بحل هذه المعضلة : <br>
+
+<div dir=ltr>
+
+9 ? -4 ? 8 ? 6 ? 10 = 7
+
+</div>
+
+طبعا في مكان ? نضع المعاملات و لا يجوز تكرار أي معامل , كما أن توزيع الأرقام الحالي يمكن تغييره
+ننتظركم" <br>
+
+<br>
+
+اما عن الحل فكان هذا الكود بلغة البرمجة Perl: <br>
+
+<div dir=ltr>
+
+<pre>
+
+use strict;
+use Algorithm::Combinatorics qw(variations);
+use feature ':5.10'; 
+
+my @operators = qw(+ - * /);
+my @numbers = qw(9 -4 8 6 10);
+my $total = 7; #required result
+
+my $iter = variations(\@operators, 4); #get combinations for operators without rep. and loop
+my $iter2 = variations(\@numbers, 5);  #get combinations for numbers without rep. and loop
+
+while (my $p = $iter->next){
+while (my $p2 = $iter2->next){
+
+#escaping precedence
+my $eval = eval ("$p2->[0] $p->[0] $p2->[1]");
+$eval = eval ("$eval $p->[1] $p2->[2]");
+$eval = eval ("$eval $p->[2] $p2->[3]");
+$eval = eval ("$eval $p->[3] $p2->[4]");
+
+if ($eval == $total){
+say "$p2->[0] ($p->[0]) $p2->[1] ($p->[1]) $p2->[2] ($p->[2]) $p2->[3] ($p->[3]) $p2->[4] = 7"; }
+}
+$iter2 = variations(\@numbers, 5); #Resets the iterator
+}
+
+</pre>
+
+</div>
+
+و الجواب : <br>
+
+<div dir=ltr>
+9 (+) -4 (*) 10 (-) 8 (/) 6 = 7 <br>
+
+-4 (+) 9 (*) 10 (-) 8 (/) 6 = 7 <br>
+
+6 (-) 10 (*) 9 (+) 8 (/) -4 = 7 <br>
+
+10 (-) 6 (*) -4 (/) 8 (+) 9 = 7 <br>
+
+10 (-) 6 (/) 8 (*) -4 (+) 9 = 7 <br>
+
+10 (/) 8 (+) 6 (-) 9 (*) -4 = 7 <br>
+
+10 (/) 8 (-) 9 (+) 6 (*) -4 = 7 <br>
+
+</div><br>
+
+دمتم في الرضا ،
+
+</div>
+ </div>
+<div id="footer" align="center">
+<br>           
+  <a href="http://blosxom.sourceforge.net/"><img src="/img/pb_blosxom.gif" alt="powered by blosxom" border="0" width="90" height="33" ></a>
+       </div>
+	   
+    </body>
+</html>

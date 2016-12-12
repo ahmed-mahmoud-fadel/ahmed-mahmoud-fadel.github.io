@@ -1,0 +1,257 @@
+ <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+ <html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="http://localhost/index.rss" >
+        <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/droid-arabic-naskh" type="text/css"/> 
+        <title> : برمجة عميل  RSS "الطريقة السهلة"</title>
+        <style type="text/css" media="screen, print, projection">
+       body,
+       html {
+              margin:0;
+              padding:0;
+              color:#000;
+              background:#fff;
+       }
+       #wrap {
+              width:900px;
+              margin:0 auto;
+              background:#ffff;
+       }
+       #header {
+       padding:5px 10px;
+              background:#ffff;
+       }
+       h1 {
+           margin:0;
+    }
+       #nav {
+              padding:5px 10px;
+              background:#ffff;
+       }
+       #nav ul {
+              margin:0;
+              padding:0;
+              list-style:none;
+       }
+       #nav li {
+              display:inline;
+              margin:0;
+              padding:0;
+       }
+       #main {
+              float:left;
+              width:900px;
+              padding:0px;
+              background:#ffff;
+       }
+       h2 {
+              margin:0 0 1em;
+       }
+
+       #footer {
+              clear:both;
+              padding:5px 10px;
+              background:#ffffff;
+       }
+       #footer p {
+              margin:0;
+    }
+       * html #footer {
+              height:1px;
+       }
+
+    a:link {color:#15153E;text-decoration:none;}
+       a:visited {color:#000000;text-decoration:none;}
+a:hover {color:#38B085;text-decoration:underline;}
+       </style>
+
+     </head>
+    <body>
+    <div id="wrap">
+    <div align="center"><h2>
+  <div style="font-family: 'Droid Arabic Kufi', serif;">::
+  <a href="https://alyassen.github.io">كل المقالات</a> ::
+   </div></h2>
+
+  </div>    
+    
+        <h2>Mon, 02 Mar 2015</h2>
+ <div id="main">
+  <div dir=rtl><div style="font-family: 'Droid Arabic Naskh', serif;">
+  <h3>برمجة عميل  RSS "الطريقة السهلة"</h3></div>
+  <div style="font-family: 'Droid Arabic Naskh', serif;">
+بسم الله الرحمن الرحيم <br>
+
+سنحاول في هذا الموضوع ان ننشيء قارئ RSS  بأقصر طريق ممكن و ذلك باستخدام مكتبة XML::RSS::Parser  و هي تتمتع بميزة جيدة الا و هي اخفاء مسألة التعامل مع اصدار الـ RSS  . في هذا الموضوع لن نتكلم عنXML  او   RSS  و كيف تعمل ، كل ما يهمنا فقط هو اننا وجدنا موقعا يوفر RSS  و نحب ان نستخدم هذه الميزة لنقل مثلا في موقع او برنامج او غير ذلك . <br>
+
+الخطوة الاولى : <br> 
+
+
+ننفذ الامر ادناه من سطر الاوامر لكي يتم تنصيب المكتبة المطلوبة : <br>
+
+<div dir=ltr>
+
+cpan XML::RSS::Parser </div>
+
+الخطوة الثانية : <br>
+
+<div dir=ltr>
+
+use strict;<br>
+use FileHandle;<br>
+use LWP::Simple;<br>
+use XML::RSS::Parser;<br>
+use feature ':5.10';
+
+</div>
+
+بعض المكتبات المساعدة الموجودة في كل نسخة من بيرل ، اذا فقط نحتاج الى استدعائها .  <br>
+
+الخطوة الثالثة : <br>
+نحاول ان نجلب ملف الـ RSS من خلال الرابط الذي يوفره الموقع :
+
+<div dir=ltr>
+
+my $file = getstore("http://rss.slashdot.org/Slashdot/slashdotLinux", "file.rss");  </div>
+
+ 
+
+الان هنا يمكن ان تفشل عملية التحميل سواءً من طرفنا او من طرف السيرفر المطلوب اذا يجب ان نتعامل مع هذا فنعمل جملة شرطية ، اذا نجح التنزيل نواصل و اذا فشل نعطي رسالة تنبيهة بفشل عملية التنزيل و ننهي البرنامج. اذا سأضع كود الفشل اولا فقط لانه اقصر :  <br>
+
+<div dir=ltr>
+
+ 
+
+else
+{
+say "error downloading file: $file";
+} </div>
+
+الخطوة الرابعة : <br>
+لنكتب الجملة الشرطية في حال نجحنا في تنزيل الملف و من ثم ننشيء كائنا جديدا من المكتبة XML::RSS::Parser  :
+
+<br>
+
+<div dir=ltr>
+
+if ( is_success($file) )
+{ <br>
+my $parser = XML::RSS::Parser->new; </div>
+
+الان نقرا الملف و نعمل له Parse  : <br>
+
+<div dir=ltr>
+
+my $fh = FileHandle->new('file.rss');<br>
+my $feed = $parser->parse_file($fh); </div>
+
+انتهينا ! الان فقط بقيت مسألة كيفية استرجاع البيانات . <br>
+
+الخطوة الخامسة : <br>
+كما قلنا الان لدينا كائن جاهز فقط المسألة مسألة تنفيذ ميثودز و لكن من هذه النقطة ستختلف الاوامر بحسب المخرج المطلوب مثلا هل سنطبع البيانات الى برنامج ويب ؟ او برنامج سطح مكتب ؟ لنقل اننا سنطبعه على سطر الاوامر لتبسيط المسألة . <br>
+اذا لنطبع عنوان "الفيد" و عدد المواضيع التي يحتويها : <br>
+
+<div dir=ltr>
+
+my $feed_title = $feed->query('/channel/title');<br>
+print $feed_title->text_content;<br>
+my $count = $feed->item_count;<br>
+say " ($count)"; </div>
+
+الان بقيت دائرة التكرار لنطبع كل عنوان خبر و رابطه : <br>
+
+<div dir=ltr>
+
+foreach my $item ( $feed->query('//item') ) {<br>
+my $title = $item->query('title');<br>
+say '  '.$title->text_content;<br>
+my $link = $item->query('link');<br>
+say $link->text_content;<br>
+}<br>
+}#end if </div>
+
+و الحمد لله رب العالمين <br>
+
+ <br>
+
+مثال على المخرج : <br>
+
+<div dir=ltr>
+
+<pre>
+
+Slashdot: Linux (15)
+KDE 4.7 RC Is Here: GRUB2 Integration, KWin Mobile
+
+http://rss.slashdot.org/~r/Slashdot/slashdotLinux/~3/MVMplrutXl0/KDE-47-RC-Is-Here-GRUB2-Integration-KWin-Mobile
+
+Linux 3.0 Will Be Faster Than 2.6.39
+
+http://rss.slashdot.org/~r/Slashdot/slashdotLinux/~3/JEJQF2e-GLE/Linux-30-Will-Be-Faster-Than-2639
+
+Who Killed the Netbook?
+
+http://rss.slashdot.org/~r/Slashdot/slashdotLinux/~3/s34Se91fC9k/Who-Killed-the-Netbook
+
+Synaptic Dropped From Ubuntu 11.10
+
+http://rss.slashdot.org/~r/Slashdot/slashdotLinux/~3/lu-nXIQFaM0/Synaptic-Dropped-From-Ubuntu-1110
+
+Thinking of Publishing Your Own $0.99 Kindle Book?
+
+http://rss.slashdot.org/~r/Slashdot/slashdotLinux/~3/j-ISop_DJlI/Thinking-of-Publishing-Your-Own-099-Kindle-Book
+
+Nokia Introduces MeeGo-Powered N9 Phone
+
+http://rss.slashdot.org/~r/Slashdot/slashdotLinux/~3/HYBu0MCHc7s/Nokia-Introduces-MeeGo-Powered-N9-Phone
+
+13-Year-Old Password Security Bug Fixed
+
+http://rss.slashdot.org/~r/Slashdot/slashdotLinux/~3/aIhIK7e5V1U/13-Year-Old-Password-Security-Bug-Fixed
+
+The Ugly State of ARM Support On Linux
+
+http://rss.slashdot.org/~r/Slashdot/slashdotLinux/~3/BQUOHkYrP9Q/The-Ugly-State-of-ARM-Support-On-Linux
+
+Court Case To Test GNU GPL
+
+http://rss.slashdot.org/~r/Slashdot/slashdotLinux/~3/Hv57ikIYJy4/Court-Case-To-Test-GNU-GPL
+
+NanoNote Goes Wireless
+
+http://rss.slashdot.org/~r/Slashdot/slashdotLinux/~3/MgQ491bKM2o/NanoNote-Goes-Wireless
+
+Ask Slashdot: Tools For Linux Disk Encryption and Integrity?
+
+http://rss.slashdot.org/~r/Slashdot/slashdotLinux/~3/-l78O5jVtgk/Ask-Slashdot-Tools-For-Linux-Disk-Encryption-and-Integrity
+
+Linus’ Other Gift to the World
+
+http://rss.slashdot.org/~r/Slashdot/slashdotLinux/~3/vZgWnU7ZEr8/Linus-Other-Gift-to-the-World
+
+Shuttleworth: Chrome Nearly Replaced FF In Ubuntu
+
+http://rss.slashdot.org/~r/Slashdot/slashdotLinux/~3/bALGeWGI6HA/Shuttleworth-Chrome-Nearly-Replaced-FF-In-Ubuntu
+
+Tom’s Hardware Dissects Ubuntu 11.4’s Interface and Performance
+
+http://rss.slashdot.org/~r/Slashdot/slashdotLinux/~3/gb_-MAiRMwE/Toms-Hardware-Dissects-Ubuntu-114s-Interface-and-Performance
+
+Ask Slashdot: Linux Support In Universities?
+
+http://rss.slashdot.org/~r/Slashdot/slashdotLinux/~3/BUSB89tnXLQ/Ask-Slashdot-Linux-Support-In-Universities
+
+</pre>
+
+</div>
+
+</div>
+ </div>
+<div id="footer" align="center">
+<br>           
+  <a href="http://blosxom.sourceforge.net/"><img src="/img/pb_blosxom.gif" alt="powered by blosxom" border="0" width="90" height="33" ></a>
+       </div>
+	   
+    </body>
+</html>

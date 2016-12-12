@@ -1,0 +1,252 @@
+ <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+ <html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="http://localhost/index.rss" >
+        <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/droid-arabic-naskh" type="text/css"/> 
+        <title> : البرمجة الكائنية في بيرل (الجزء الثالث) " الطريقة الحديثة"</title>
+        <style type="text/css" media="screen, print, projection">
+       body,
+       html {
+              margin:0;
+              padding:0;
+              color:#000;
+              background:#fff;
+       }
+       #wrap {
+              width:900px;
+              margin:0 auto;
+              background:#ffff;
+       }
+       #header {
+       padding:5px 10px;
+              background:#ffff;
+       }
+       h1 {
+           margin:0;
+    }
+       #nav {
+              padding:5px 10px;
+              background:#ffff;
+       }
+       #nav ul {
+              margin:0;
+              padding:0;
+              list-style:none;
+       }
+       #nav li {
+              display:inline;
+              margin:0;
+              padding:0;
+       }
+       #main {
+              float:left;
+              width:900px;
+              padding:0px;
+              background:#ffff;
+       }
+       h2 {
+              margin:0 0 1em;
+       }
+
+       #footer {
+              clear:both;
+              padding:5px 10px;
+              background:#ffffff;
+       }
+       #footer p {
+              margin:0;
+    }
+       * html #footer {
+              height:1px;
+       }
+
+    a:link {color:#15153E;text-decoration:none;}
+       a:visited {color:#000000;text-decoration:none;}
+a:hover {color:#38B085;text-decoration:underline;}
+       </style>
+
+     </head>
+    <body>
+    <div id="wrap">
+    <div align="center"><h2>
+  <div style="font-family: 'Droid Arabic Kufi', serif;">::
+  <a href="https://alyassen.github.io">كل المقالات</a> ::
+   </div></h2>
+
+  </div>    
+    
+        <h2>Mon, 21 Sep 2015</h2>
+ <div id="main">
+  <div dir=rtl><div style="font-family: 'Droid Arabic Naskh', serif;">
+  <h3>البرمجة الكائنية في بيرل (الجزء الثالث) " الطريقة الحديثة"</h3></div>
+  <div style="font-family: 'Droid Arabic Naskh', serif;">
+ 
+
+بسم  الله الرحمن الرحيم <br><br>
+
+ 
+
+نواصل الكلام عن البرمجة الكائنية في بيرل و هذه المرة سنستعرض النموذج الحديث او ما يعرف بـ Moose و قد تقدم الكلام عن الجانب التاريخي و النظري في المقالة الاولى . هذه المرة لن استرسل في شرح المصطلحات و المفاهيم فقد قمنا بهذا الامر في المقالتين الاولى و الثانية و مهمتنا هنا فقط استعراض طريقة الكتابة و التنبيه الى اوجه الاختلاف ان وجدت.  <br>
+
+ 
+
+نبدأ بتعريف كلاس جديد باسم car  بهذه الطريقة : <br>
+
+<div dir=ltr>
+
+package Car; <br>
+
+use Moose; </div>
+
+انتهى ! هذا كلاس كامل و في النموذج الجديد Moose تقوم بتوفير الكونستركتر الافتراضي بالاضافة الى توفير الـ getters و الـ setters فلا نحتاج لكتابة اكواد خاصة لها ! حسنــــاً لنجعل من هذا الكلاس كلاسا مجردا Abstract اي انه لا يمكن انشاء اي كائن من هذا الكلاس فالغرض الرئيسي منه هو غرض تنظيمي ، و ذلك يتم باضافة هذا السطر : <br>
+
+<div dir=ltr>
+
+ 
+
+use MooseX::ABC; </div>
+
+الان نأتي لطريقة كتابة الخصائص في النموذج الجديد : <br>
+
+<div dir=ltr>
+
+ 
+
+has 'make' => (is => 'rw' , isa => 'Str'); <br>
+
+has 'type' => (is => 'rw' , isa => 'Str'); </div>
+
+في مثالنا قلنا ان الكلاس هذا يحتوي على خاصية باسم make "اسم الشركة المصنعة" و ان تصريح الوصول اليه rw و هي اختصار لـ read write اي يمكن الوصول الى هذا الخاصية و يمكن تغيير محتواها . في نهاية التعريف قلنا اننا نتوقع قيمة نصية لهذه الخاصية . نلاحظ ان الاعلان عن الخصائص في النموذج الجديد مفصل و واضح و افضل بكثير من النموذج القديم يكفي فقط خاصية تحديد نوع البيانات . قلنا ايضا ان Moose ستنشئ لنا ميثودات مساعدة بدون الحاجة الى كتابتها يدويا فالان يمكننا ان نصل الى قيم الخصائص هكذا ( لو على فرض ان الكلاس ليس كلاسا مجردا و يمكن فعليا انشاء كائنات منه ) : <br>
+
+<div dir=ltr>
+
+ 
+
+use v5.12; <br>
+
+my $car = Car->new( make => 'toyota' , type =>'camry'); <br>
+
+say $car->make(); #toyota </div>
+
+ 
+
+بل يمكننا ان نعدل قيم الخصائص ايضا فلو على فرض ان شركة نيسان قامت بشراء فئة الكامري من تويوتا فيمكننا ان ننقل الملكية هكذا: <br>
+
+<div dir=ltr>
+
+ 
+
+$car->make('Nissan'); <br>
+
+say $car->make(); #Nissan </div>
+
+الان لانشاء كلاس Salon يرث هذا الكلاس المجرد : <br>
+
+<div dir=ltr>
+
+ 
+
+package Salon; <br>
+
+use Moose; <br>
+
+extends 'Car'; </div>
+
+فكلمة extends هنا هي من تقوم بتحديد العلاقة بين الكلاسين بأنها وراثية .  طبعا كلاس صالون سيرث كل شيء من الكلاس الاب و يمكننا ان نضيف اشياء خاصة به مثلا: <br>
+
+<div dir=ltr>
+
+ 
+
+has 'options' => (is => 'rw' , isa => 'Str'); </div>
+
+طبعا انشاء الخصائص في النموذج الجديد مفصل جدا و لو تقصينا الكلام عن امكانياته فسيطول بنا المقام . لكن هنا احببت الكلام عن الـ roles و هي شيء يشبه الـ interfaces في جافا حيث انها كلاسات مهمتها تنظيمية و يمكن استخدامها تماما مثلما تستخدم في جافا او بطرق اخرى حيث في بيرل يمكن اضافة الاكواد الخاصة بالميثودز و ليس فقط الاكتفاء باعلان اسماء الميثودز . لنأخذ مثالا لتتضح الصورة فمثلا بعض الكلاسات توفر آلية لحفظ الكائنات و استرجاعها لاحقا هذه الالية من الافضل ان تطبق على انها واجهة بدلا من علاقة التوارث . و في النموذج الجديد الامر بهذه البساطة : <br>
+
+<div dir=ltr>
+
+ 
+
+ 
+
+package Storable; <br>
+
+use Moose::Role; <br>
+
+ 
+
+requires 'store'; </div>
+
+فهنا قلنا ان Storable تتطلب ان يكون الكلاس المطبق يحتوي على ميثود باسم store. و الان عندما نعلن عن كلاس ما بأنه يطبق هذه الواجهة بالامر : <br>
+
+<div dir=ltr>
+
+ 
+
+with 'Storable'; </div>
+
+فعلينا ان نقوم بإنشاء ميثود باسم store و الا سيرجع لنا المفسر خطأ : <br>
+
+ 
+
+<div dir=ltr>
+
+ 
+
+sub store{<br>
+
+     #some code to store the object<br>
+
+     }; </div>
+
+ 
+
+و لو اردنا ان نستعلم عن كلاس ما في كونه يطبق واجهة معينة او لا فيمكننا ذلك من خلال الامر DOES : <br>
+
+ 
+
+<div dir=ltr>
+
+say "it is storable" if $car->DOES('Storable'); </div>
+
+ 
+
+بشكل عام ينصح باستخدام الـ roles  بدلا من استخدام التعدد في التوارث . على كل حال لن اطيل في استعراض نموذج Moose فهناك الكثير ليقال هنا و لكن فيما تقدم استعراض لاهم المزايا التي نستخدمها بشكل متكرر . <br>
+ختاما تجدر الاشارة الى ان هناك مكتبات اخرى متوافقة مع Moose مثل Moo  و Mouse و لكن هناك مكتبات اخرى تقدم نماذج كائنية خاصة بها و لها فلسفتها الخاصة ، هذا بالاضافة الى الكثير من المكتبات المساعدة التي تقدم آليات لتسهيل البرمجة الكائنية في النموذج القديم مثلا Object::Tiny تقدم ابسط اشكال بناء الكلاسات و اكثرها اختصارا : <br>
+
+<div dir=ltr>
+
+# Define a class<br>
+
+package Foo; <br>
+
+use Object::Tiny qw{ bar baz };<br>
+
+1; <br>
+
+# Use the class<br>
+
+my $object = Foo->new( bar => 1 ); <br>
+
+print "bar is " . $object->bar . "\n"; </div>
+
+ 
+
+خلاصة المطلب في هذه السلسلة من المواضيع ان بيرل مختلفة عن اكثر لغات البرمجة من حيث انها تحتوي على اكثر من نموذج كائني . و قد استعرضنا النموذج القديم و بعض النماذج الجديدة من هنا قد يلحظ القارئ الكريم قوة هذه اللغة من حيث امكانية تطويعها الى حدود قصوى .  <br>
+
+ 
+
+دمتم في الرضا ،
+
+ 
+
+ 
+</div>
+ </div>
+<div id="footer" align="center">
+<br>           
+  <a href="http://blosxom.sourceforge.net/"><img src="/img/pb_blosxom.gif" alt="powered by blosxom" border="0" width="90" height="33" ></a>
+       </div>
+	   
+    </body>
+</html>
