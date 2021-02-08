@@ -1,7 +1,10 @@
 @import url(//fonts.googleapis.com/css?family=Lato:300:400);
  <style type="text/css" media="screen, print, projection">
 
-       body,
+       body{
+              background: linear-gradient(60deg, rgba(84,58,183,1) 0%, rgba(0,172,193,1) 100%);
+
+       }
 
        html {
 
@@ -115,8 +118,7 @@ a:hover {color:#38B085;text-decoration:underline;}
 /* Header Section */
 body {
   margin:0;
-  background: linear-gradient(60deg, rgba(84,58,183,1) 0%, rgba(0,172,193,1) 100%);
-
+  
 }
 
 h1 {
